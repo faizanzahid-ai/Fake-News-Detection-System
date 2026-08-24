@@ -1,0 +1,186 @@
+# AI News Intelligence Platform - Commands Reference
+
+---
+
+## Quick Start
+
+### Windows PowerShell
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+If activation is blocked:
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### Windows CMD
+
+```cmd
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+### Linux / macOS
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+---
+
+## Testing
+
+### Run All Tests
+```bash
+pytest -v
+```
+
+### Run Tests with Coverage
+```bash
+pytest tests/ -v --tb=short
+```
+
+### Run Specific Test File
+```bash
+pytest tests/test_loader.py -v
+pytest tests/test_preprocessing.py -v
+pytest tests/test_features.py -v
+pytest tests/test_models.py -v
+pytest tests/test_predictions.py -v
+pytest tests/test_llm.py -v
+```
+
+---
+
+## Generate Sample Dataset
+
+### Generate sample_news.csv and sample_news.json
+```bash
+python -c "from src.utils.generate_sample_data import generate_synthetic_dataset; generate_synthetic_dataset()"
+```
+
+This creates:
+- `data/raw/sample_news.csv`
+- `data/raw/sample_news.json`
+
+---
+
+## PostgreSQL Configuration
+
+### Environment Variable (Recommended)
+```
+DATABASE_URL=postgresql://user:password@localhost:5432/fakenews_db
+```
+
+### Individual Variables
+```
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=fakenews_db
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
+```
+
+### Docker PostgreSQL (Optional)
+```bash
+docker compose up -d
+docker compose down
+```
+
+---
+
+## LLM Configuration
+
+### Environment Variables
+```
+OPENAI_API_KEY=your_openai_key_here
+ANTHROPIC_API_KEY=your_anthropic_key_here
+LLM_PROVIDER=mock
+LLM_MODEL=gpt-3.5-turbo
+```
+
+### Supported Providers
+- `mock` - Offline testing (default)
+- `openai` - OpenAI GPT models
+- `anthropic` - Anthropic Claude models
+
+---
+
+## Development
+
+### Install Development Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### Run Streamlit App
+```bash
+streamlit run app.py
+```
+
+### Run Streamlit on Custom Port
+```bash
+streamlit run app.py --server.port 8501
+```
+
+---
+
+## Project Structure Overview
+
+```
+fake-news-detection/
+├── app.py                    # Main Streamlit application
+├── requirements.txt          # Python dependencies
+├── commands.txt              # This file
+├── config/config.yaml        # Application configuration
+├── data/
+│   ├── raw/                  # Raw uploaded data
+│   ├── processed/            # Processed data
+│   └── predictions/          # Prediction outputs
+├── models/                   # Saved trained models
+├── reports/
+│   ├── experiments/          # Experiment logs
+│   └── generated/            # Generated reports
+├── logs/                     # Application logs
+├── tests/                    # Unit tests
+└── src/                      # Source code modules
+```
+
+---
+
+## Troubleshooting
+
+### Virtual Environment Issues
+```powershell
+# Windows PowerShell - if execution policy blocks activation
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### Port Already in Use
+```bash
+# Kill process on port 8501 (Linux/macOS)
+lsof -ti:8501 | xargs kill -9
+
+# Windows
+netstat -ano | findstr :8501
+taskkill /PID <PID> /F
+```
+
+### Clear Python Cache
+```bash
+# Windows
+Get-ChildItem -Recurse -Filter __pycache__ | Remove-Item -Recurse -Force
+
+# Linux/macOS
+find . -type d -name __pycache__ -exec rm -rf {} +
+```
